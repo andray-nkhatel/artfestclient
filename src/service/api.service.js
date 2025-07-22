@@ -235,8 +235,10 @@ export function submitScore(payload) {
   return apiClient.post('/scoring', payload);
 }
 export function getMyScores() {
-
   return apiClient.get('/scoring/my-scores');
+}
+export function getAllScores() {
+  return apiClient.get('/scoring/all-scores');
 }
 export function updateScore(id, payload) {
   return apiClient.put(`/scoring/${id}`, payload);

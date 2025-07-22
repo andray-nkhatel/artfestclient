@@ -34,12 +34,11 @@ const model = computed(() => {
   let menuItems = [];
   if (roles.includes('Admin')) {
     menuItems = [
-      { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/app/' },
-      { label: 'Admin Dashboard', icon: 'pi pi-fw pi-cog', to: '/app/admin-dashboard' }
+      // { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/app/' },
+      { label: 'Admin Dashboard', icon: 'pi pi-fw pi-home', to: '/app/admin-dashboard' }
     ];
   } else if (roles.includes('Judge') || roles.includes('Official')) {
     menuItems = [
-      { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/app/' },
       { label: 'Judge Dashboard', icon: 'pi pi-fw pi-star', to: '/app/judge-dashboard' }
     ];
   } else {

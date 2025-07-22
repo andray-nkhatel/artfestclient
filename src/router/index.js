@@ -39,18 +39,18 @@ const router = createRouter({
                      path: 'judge-dashboard',
                      name: 'JudgeDashboard',
                      component: JudgeDashboard,
-                     meta: { requiresAuth: true, roles: ['Official', 'Judge'] }
+                     meta: { requiresAuth: true, roles: ['Judge'] }
                  },
-                 {
-                     path: 'score/:houseId/:categoryId',
-                     name: 'Scoring',
-                     component: () => import('@/views/pages/Empty.vue'), // Placeholder, replace with real scoring view
-                     meta: { requiresAuth: true, roles: ['Official', 'Judge'] }
-                 },
+                //  {
+                //      path: 'score/:houseId/:categoryId',
+                //      name: 'Scoring',
+                //      component: () => import('@/views/pages/Empty.vue'), // Placeholder, replace with real scoring view
+                //      meta: { requiresAuth: true, roles: ['Judge'] }
+                //  },
                  {
                      path: 'admin-dashboard',
                      name: 'AdminDashboard',
-                     component: () => import('@/views/pages/Empty.vue'),
+                     component: () => import('@/views/pages/AdminDashboard.vue'),
                      meta: { requiresAuth: true, roles: ['Admin'] }
                  }
         ]

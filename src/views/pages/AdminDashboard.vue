@@ -168,6 +168,61 @@ const categoryRankings = computed(() => {
   return Object.values(rankings).sort((a, b) => parseFloat(b.averageScore) - parseFloat(a.averageScore));
 });
 
+// House rankings by category
+const houseRankingsByCategory = computed(() => {
+  const rankingsByCategory = {};
+  
+  // Initialize rankings for each category
+  categories.value.forEach(category => {
+    rankingsByCategory[category.id] = {
+      categoryId: category.id,
+      categoryName: category.name,
+      houseRankings: []
+    };
+  });
+  
+  // Calculate house scores for each category
+  houses.value.forEach(house => {
+    categories.value.forEach(category => {
+      const categoryScores = scores.value.filter(score => 
+        score.houseId === house.id && score.categoryId === category.id
+      );
+      
+      if (categoryScores.length > 0) {
+        let totalMarks = 0;
+        let totalCriteria = 0;
+        let judgesCount = new Set();
+        
+        categoryScores.forEach(score => {
+          (score.details || []).forEach(detail => {
+            totalMarks += detail.mark;
+            totalCriteria++;
+          });
+          judgesCount.add(score.judgeId);
+        });
+        
+        const averageScore = totalCriteria > 0 ? (totalMarks / totalCriteria).toFixed(2) : '0.00';
+        
+        rankingsByCategory[category.id].houseRankings.push({
+          houseId: house.id,
+          houseName: house.name,
+          totalMarks: totalMarks,
+          averageScore: averageScore,
+          criteriaCount: totalCriteria,
+          judgesCount: judgesCount.size
+        });
+      }
+    });
+  });
+  
+  // Sort house rankings within each category by average score (descending)
+  Object.values(rankingsByCategory).forEach(category => {
+    category.houseRankings.sort((a, b) => parseFloat(b.averageScore) - parseFloat(a.averageScore));
+  });
+  
+  return rankingsByCategory;
+});
+
 // Flattened scores for table display
 const tableScores = computed(() => {
   const houseMap = Object.fromEntries(houses.value.map(h => [h.id, h.name]));
@@ -337,6 +392,28 @@ onMounted(async () => {
               </template>
             </Column>
           </DataTable>
+        </div>
+      </div>
+
+      <!-- House Rankings by Category -->
+      <div class="mb-8">
+        <h2 class="text-xl font-semibold mb-4">House Rankings by Category</h2>
+        <div v-for="category in Object.values(houseRankingsByCategory)" :key="category.categoryId" class="mb-6">
+          <h3 class="text-lg font-medium mb-3 text-gray-700 dark:text-gray-300">{{ category.categoryName }}</h3>
+          <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+            <DataTable :value="category.houseRankings" class="p-datatable-sm">
+              <Column field="houseName" header="House" sortable></Column>
+              <Column field="averageScore" header="Average Score" sortable></Column>
+              <Column field="totalMarks" header="Total Marks" sortable></Column>
+              <Column field="criteriaCount" header="Criteria Count" sortable></Column>
+              <Column field="judgesCount" header="Judges Count" sortable></Column>
+              <Column header="Rank" :exportable="false">
+                <template #body="slotProps">
+                  <span class="font-bold text-lg">{{ slotProps.index + 1 }}</span>
+                </template>
+              </Column>
+            </DataTable>
+          </div>
         </div>
       </div>
 

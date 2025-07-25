@@ -1,15 +1,14 @@
 import AppLayout from '@/layout/AppLayout.vue';
 import JudgeDashboard from '@/views/pages/JudgeDashboard.vue';
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router';
 import { authGuard } from './guard/auth.guard';
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHashHistory(),
     routes: [
         {
             path: '/',
-            name: 'landing',
-            component: () => import('@/views/pages/auth/Login.vue')
+            redirect: '/auth/login'
         },
         {
             path: '/auth/login',
@@ -26,14 +25,14 @@ const router = createRouter({
             path: '/app',
             component: AppLayout,
             children: [
-                {
-                    path: '',
-                    name: 'dashboard',
-                    meta:{
-                        requiresAuth: true,
-                    },
-                    component: () => import('@/views/pages/Empty.vue')
-                },
+                // {
+                //     path: '',
+                //     name: 'dashboard',
+                //     meta:{
+                //         requiresAuth: true,
+                //     },
+                //     component: () => import('@/views/pages/Empty.vue')
+                // },
                
                  {
                      path: 'judge-dashboard',
@@ -41,12 +40,7 @@ const router = createRouter({
                      component: JudgeDashboard,
                      meta: { requiresAuth: true, roles: ['Judge'] }
                  },
-                //  {
-                //      path: 'score/:houseId/:categoryId',
-                //      name: 'Scoring',
-                //      component: () => import('@/views/pages/Empty.vue'), // Placeholder, replace with real scoring view
-                //      meta: { requiresAuth: true, roles: ['Judge'] }
-                //  },
+              
                  {
                      path: 'admin-dashboard',
                      name: 'AdminDashboard',
